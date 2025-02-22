@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import storage from './storage'
-import env from '@/config'
-import { Result } from '@/types/api'
-import { message } from 'antd'
+import { env } from '@/config'
+
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
@@ -20,10 +19,10 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = 'Bearer ' + token
     }
-    if (env.mock) {
-      config.baseURL = env.mockApi
+    if (import.meta.env.VITE_MOCK === 'true') {
+      config.baseURL = import.meta.env.VITE_MOCK_API
     } else {
-      config.baseURL = env.baseApi
+      config.baseURL = import.meta.env.VITE_BASE_API
     }
     return {
       ...config
@@ -35,27 +34,13 @@ instance.interceptors.request.use(
 )
 
 // 响应拦截器
-instance.interceptors.response.use(
-  response => {
-    const data: Result = response.data
-    if (data.code === 500001) {
-      message.error(data.msg)
-      storage.remove('token')
-      location.href = '/login?callback=' + encodeURIComponent(location.href)
-    } else if (data.code != 0) {
-      if (response.config.showError === false) {
-        return Promise.resolve(data)
-      } else {
-        message.error(data.msg)
-        return Promise.reject(data)
-      }
-    }
-    return data.data
-  },
-  error => {
-    return Promise.reject(error.message)
-  }
-)
+instance.interceptors.response.use(response => {
+  const data = response.data
+  // if (data.code === 500001) {
+  // } else if (data.code != 0) {
+  // }
+  return data.data
+})
 
 export default {
   get<T>(url: string, params?: object): Promise<T> {
