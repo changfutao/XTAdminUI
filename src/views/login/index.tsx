@@ -1,9 +1,21 @@
 import React, { memo } from 'react'
 import './index.less'
-import { Button, Form, Input, FieldType } from 'antd'
+import { Button, Form, Input, App } from 'antd'
+import { login } from '@/api/auth'
+import { Auth } from '@/types/api'
+import storage from '@/utils/storage'
 
 const Login = memo(() => {
-  const onFinish = () => {}
+  const { message } = App.useApp()
+  const onFinish = (values: Auth.LoginInput) => {
+    login(values).then(res => {
+      storage.set('token', res)
+      message.success('登录成功')
+      const params = new URLSearchParams(location.search)
+      const callback = params.get('callback') || '/welcome'
+      location.href = callback
+    })
+  }
   return (
     <div className='login'>
       <div className='login-wrapper'>
@@ -15,7 +27,7 @@ const Login = memo(() => {
           onFinish={onFinish}
           autoComplete='off'
         >
-          <Form.Item<FieldType>
+          <Form.Item<Auth.LoginInput>
             placeholder='请输入用户名'
             name='username'
             rules={[{ required: true, message: '请输入用户名!' }]}
@@ -23,7 +35,7 @@ const Login = memo(() => {
             <Input />
           </Form.Item>
 
-          <Form.Item<FieldType>
+          <Form.Item<Auth.LoginInput>
             placeholder='请输入密码'
             name='password'
             rules={[{ required: true, message: '请输入密码!' }]}

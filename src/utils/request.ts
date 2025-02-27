@@ -2,9 +2,9 @@ import axios, { AxiosError } from 'axios'
 import storage from './storage'
 import env from '@/config'
 import { Result } from '@/types/api'
-import { message } from 'antd'
+import { message } from '@/utils/AntdGlobal'
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API,
+  // baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
   timeoutErrorMessage: '请求超时, 请稍后再试',
   withCredentials: false, // 表示跨域请求时是否需要使用凭证,当为true时,服务器必须配置CROS

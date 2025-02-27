@@ -4,3 +4,10 @@ export interface Result<T = any> {
   data: T
   msg: string
 }
+
+export namespace Auth {
+  export interface LoginInput {
+    userName: string
+    password: string
+  }
+}
