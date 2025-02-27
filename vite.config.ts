@@ -5,10 +5,12 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    host: 'localhost',
     port: 8080,
     proxy: {
-      '/api': 'http://localhost:8888/api'
+      '/api': {
+        target: 'http://127.0.0.1:8888',
+        changeOrigin: true, // 允许跨域
+      }
     }
   },
   resolve: {
