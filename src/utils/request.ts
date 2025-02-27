@@ -3,6 +3,7 @@ import storage from './storage'
 import env from '@/config'
 import { Result } from '@/types/api'
 import { message } from 'antd'
+import { showLoading, hideLoading } from './loading';
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
@@ -16,6 +17,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
+    showLoading()
     const token = storage.get('token')
     if (token) {
       config.headers.Authorization = 'Bearer ' + token
@@ -38,6 +40,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     const data: Result = response.data
+    hideLoading()
     if (data.code === 500001) {
       message.error(data.msg)
       storage.remove('token')
@@ -53,6 +56,7 @@ instance.interceptors.response.use(
     return data.data
   },
   error => {
+    hideLoading()
     return Promise.reject(error.message)
   }
 )

@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import request from '@/utils/request'
+
 const welcome = memo(() => {
   const handleClick = () => {
     request.post('/login', { username: 'ross', password: '123456' }).then(res => {

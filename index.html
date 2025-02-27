@@ -5,9 +5,56 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <style>
+      .loading {
+        animation: rotate 1.3s linear infinite;
+      }
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="loading" style="display: none">
+      <svg
+        t="1740268335598"
+        class="icon loading"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="2492"
+        width="64"
+        height="64"
+      >
+        <path
+          d="M814.4 814.4m201.6 0a201.6 201.6 0 1 0-403.2 0 201.6 201.6 0 1 0 403.2 0Z"
+          fill="#EBF2FC"
+          p-id="2493"
+        ></path>
+        <path
+          d="M209.6 814.4m201.6 0a201.6 201.6 0 1 0-403.2 0 201.6 201.6 0 1 0 403.2 0Z"
+          fill="#B5D2F3"
+          p-id="2494"
+        ></path>
+        <path
+          d="M209.6 209.6m201.6 0a201.6 201.6 0 1 0-403.2 0 201.6 201.6 0 1 0 403.2 0Z"
+          fill="#7FB0EA"
+          p-id="2495"
+        ></path>
+        <path
+          d="M814.4 209.6m201.6 0a201.6 201.6 0 1 0-403.2 0 201.6 201.6 0 1 0 403.2 0Z"
+          fill="#4A90E2"
+          p-id="2496"
+        ></path>
+      </svg>
+      <p>加载中...</p>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
