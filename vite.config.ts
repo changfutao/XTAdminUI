@@ -8,8 +8,9 @@ export default defineConfig({
     port: 8080,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8888',
+        target: 'http://127.0.0.1:8888/',
         changeOrigin: true, // 允许跨域
+        rewrite: p => p.replace(/^\/api/, '')
       }
     }
   },

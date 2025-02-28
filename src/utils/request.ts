@@ -3,22 +3,18 @@ import storage from './storage'
 import env from '@/config'
 import { IResult, IConfig } from '@/types/api'
 import { message } from '@/utils/AntdGlobal'
-import { showLoading, hideLoading } from '@/utils/loading';
+import { showLoading, hideLoading } from '@/utils/loading'
 const instance = axios.create({
   // baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
   timeoutErrorMessage: '请求超时, 请稍后再试',
-  withCredentials: false, // 表示跨域请求时是否需要使用凭证,当为true时,服务器必须配置CROS
-  headers: {
-    icode: ''
-  }
+  withCredentials: false // 表示跨域请求时是否需要使用凭证,当为true时,服务器必须配置CROS
 })
 
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
-    if(config.showLoading)
-      showLoading()
+    if (config.showLoading) showLoading()
     const token = storage.get('token')
     if (token) {
       config.headers.Authorization = 'Bearer ' + token
@@ -42,8 +38,8 @@ instance.interceptors.response.use(
   response => {
     const data: IResult = response.data
     hideLoading()
-    if(!data.success) {
-      if(response.config.showError) {
+    if (!data.success) {
+      if (response.config.showError) {
         message.error(data.msg)
         return Promise.reject(data)
       } else {
@@ -66,6 +62,7 @@ instance.interceptors.response.use(
   },
   error => {
     hideLoading()
+    message.error(error.message)
     return Promise.reject(error.message)
   }
 )
