@@ -3,14 +3,15 @@ import Welcome from '@/views/welcome'
 import Login from '@/views/login'
 import Forbidden from '@/views/403'
 import NotFound from '@/views/404'
+import Layout from '@/layout'
 const router = [
   {
     path: '/',
     element: <Navigate to='/welcome' />
   },
   {
-    path: '/welcome',
-    element: <Welcome />
+    element: <Layout />,
+    children: [{ path: '/welcome', element: <Welcome /> }]
   },
   {
     path: '/login',
