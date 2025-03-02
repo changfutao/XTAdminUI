@@ -1,17 +1,14 @@
 import React, { memo } from 'react'
-import request from '@/utils/request'
+import styles from './index.module.less'
 
 const welcome = memo(() => {
-  const handleClick = () => {
-    request.post('/login', { username: 'ross', password: '123456' }).then(res => {
-      // eslint-disable-next-line no-console
-      console.log(res)
-    })
-  }
   return (
-    <div>
-      <h2>welcome</h2>
-      <button onClick={handleClick}>Click</button>
+    <div className={styles.wrapper}>
+      <div className={styles.left}>
+        <div className={styles.title}>技术栈</div>
+        <div className={styles.content}>React18 + TypeScript + Ant Design5.x</div>
+      </div>
+      <div className={styles.right}></div>
     </div>
   )
 })

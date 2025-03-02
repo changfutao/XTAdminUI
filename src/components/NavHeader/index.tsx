@@ -21,7 +21,7 @@ const NavHeader = memo(() => {
         <Breadcrumb items={[{ title: '首页' }, { title: '工作台' }]} />
       </div>
       <div className={styles.right}>
-        <Switch checkedChildren='暗黑' unCheckedChildren='淡色' />
+        <Switch checkedChildren='暗黑' unCheckedChildren='默认' />
 
         <Dropdown menu={{ items }} placement='bottomLeft'>
           <span className={styles.title}>Ross</span>

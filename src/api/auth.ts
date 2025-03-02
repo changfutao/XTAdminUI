@@ -6,5 +6,5 @@ import { Auth } from '@/types/api'
  * @returns
  */
 export const login = (data: Auth.LoginInput) => {
-  return request.post('auth/login', data)
+  return request.post<string>('auth/login', data)
 }
