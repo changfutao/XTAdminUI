@@ -5,6 +5,7 @@ import Forbidden from '@/views/403'
 import NotFound from '@/views/404'
 import Layout from '@/layout'
 import Dashboard from '@/views/dashboard'
+import User from '@/views/system/user'
 const router = [
   {
     path: '/',
@@ -14,7 +15,8 @@ const router = [
     element: <Layout />,
     children: [
       { path: '/welcome', element: <Welcome /> },
-      { path: '/dashboard', element: <Dashboard /> }
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/user', element: <User /> }
     ]
   },
   {

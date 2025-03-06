@@ -2,7 +2,7 @@ import React, { memo, useEffect } from 'react'
 import { Descriptions, Avatar, DescriptionsProps, Card } from 'antd'
 import styles from './index.module.less'
 import { RedoOutlined } from '@ant-design/icons'
-import * as echarts from 'echarts'
+import useChart from '@/hook/useChart'
 
 const dashboard = memo(() => {
   const items: DescriptionsProps['items'] = [
@@ -32,11 +32,11 @@ const dashboard = memo(() => {
       children: '山东青岛'
     }
   ]
-
+  const [lineChartRef, lineChartInstance] = useChart()
+  const [pieChartRef1, pieChartInstance1] = useChart()
+  const [pieChartRef2, pieChartInstance2] = useChart()
   useEffect(() => {
-    const lineChartDom = document.querySelector('#lineChart') as HTMLDivElement
-    const lineChart = echarts.init(lineChartDom)
-    lineChart.setOption({
+    lineChartInstance?.setOption({
       legend: {
         orient: 'horizontal', // 标题方向
         data: ['订单', '流水']
@@ -67,9 +67,7 @@ const dashboard = memo(() => {
       ]
     })
 
-    const pieChartDom1 = document.querySelector('#pieChart1') as HTMLDivElement
-    const pieChart1 = echarts.init(pieChartDom1)
-    pieChart1.setOption({
+    pieChartInstance1?.setOption({
       tooltip: {
         trigger: 'item'
       },
@@ -92,7 +90,36 @@ const dashboard = memo(() => {
         }
       ]
     })
-  }, [])
+
+    pieChartInstance2?.setOption({
+      grid: {
+        left: 0,
+        top: 0
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'horizontal'
+      },
+      series: [
+        {
+          name: 'Access From',
+          type: 'pie',
+          radius: [20, 120],
+          center: ['50%', '50%'],
+          roseType: 'area',
+          data: [
+            { value: 300, name: '18岁' },
+            { value: 735, name: '35岁' },
+            { value: 580, name: '41岁' },
+            { value: 484, name: '25岁' },
+            { value: 300, name: '29岁' }
+          ]
+        }
+      ]
+    })
+  }, [lineChartInstance, pieChartInstance1, pieChartInstance2])
   return (
     <div className={styles.wrapper}>
       <div className={styles.userInfo}>
@@ -123,13 +150,13 @@ const dashboard = memo(() => {
           <div className={styles.content}>120座</div>
         </div>
       </div>
-      <Card title='订单和流水走势图' extra={<RedoOutlined className={styles.refresh} />}>
-        <div id='lineChart' className={styles.chart}></div>
+      <Card className={styles.card} title='订单和流水走势图' extra={<RedoOutlined className={styles.refresh} />}>
+        <div ref={lineChartRef} className={styles.chart}></div>
       </Card>
-      <Card title='司机分布' extra={<RedoOutlined className={styles.refresh} />}>
+      <Card className={styles.card} title='司机分布' extra={<RedoOutlined className={styles.refresh} />}>
         <div className={styles.chartWrapper}>
-          <div id='pieChart1' className={styles.pieChart}></div>
-          <div id='pieChart2' className={styles.pieChart}></div>
+          <div ref={pieChartRef1} className={styles.pieChart}></div>
+          <div ref={pieChartRef2} className={styles.pieChart}></div>
         </div>
       </Card>
     </div>
