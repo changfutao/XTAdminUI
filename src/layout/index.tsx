@@ -5,7 +5,7 @@ import NavHeader from '@/components/NavHeader'
 import NavFooter from '@/components/NavFooter'
 import Menu from '@/components/Menu'
 import styles from './index.module.less'
-const { Content, Sider } = Layout
+const { Sider } = Layout
 const LayoutFC = memo(() => {
   return (
     <Watermark content='ross'>

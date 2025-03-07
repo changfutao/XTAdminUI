@@ -1,112 +1,61 @@
-import React, { memo, useEffect, useState, useRef } from 'react'
-import { Form, Button, Input, Space, Tag, Table } from 'antd'
+import React, { memo, useEffect, useState } from 'react'
+import { Form, Button, Input, Space, Table } from 'antd'
 import type { TableProps } from 'antd'
+import type { IPageInfo, User } from '@/types/api'
+import useTableScrollHeight from '@/hook/useTableScrollHeight'
 import styles from './index.module.less'
 type LayoutType = Parameters<typeof Form>[0]['layout']
 const user = memo(() => {
   const [form] = Form.useForm()
   const [formLayout] = useState<LayoutType>('inline')
-  interface DataType {
-    key: string
-    name: string
-    age: number
-    address: string
-    tags: string[]
-  }
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<User.IUser>['columns'] = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>
+      title: '用户名',
+      dataIndex: 'userName'
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age'
+      title: '昵称',
+      dataIndex: 'nickName'
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address'
+      title: '手机号',
+      dataIndex: 'phone'
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green'
-            if (tag === 'loser') {
-              color = 'volcano'
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            )
-          })}
-        </>
-      )
+      title: '状态',
+      dataIndex: 'status'
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Space size='middle'>
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
+        <Space size='small'>
+          <Button type='text'>编辑</Button>
+          <Button type='text' danger>
+            删除
+          </Button>
         </Space>
       )
     }
   ]
-
-  const data: DataType[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer']
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser']
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher']
-    },
-    {
-      key: '4',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher']
-    },
-    {
-      key: '5',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher']
-    },
-    {
-      key: '5',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher']
-    }
-  ]
+  const [tableRef, tableHeight] = useTableScrollHeight()
+  const [data, setData] = useState<User.IUser[]>([])
+  const [total, setTotal] = useState(0)
+  const [pageInfo, setPageInfo] = useState<IPageInfo>({ current: 1, pageSize: 10 })
+  useEffect(() => {
+    const infos: User.IUser[] = Array.from({ length: 50 })
+      .fill({})
+      .map(_ => ({
+        key: Math.random(),
+        userName: 'John Brown' + Math.random(),
+        nickName: 'aaa',
+        phone: '123123123123',
+        status: '在职'
+      }))
+    setData(infos)
+    setTotal(infos.length)
+  }, [pageInfo.current, pageInfo.pageSize])
   return (
     <div className={styles.wrapper}>
       <Form className='search-form' layout={formLayout} form={form}>
@@ -120,7 +69,7 @@ const user = memo(() => {
           </Space>
         </Form.Item>
       </Form>
-      <div className={styles.mainContent}>
+      <div ref={tableRef} className={styles.mainContent}>
         <div className={styles.tool}>
           <Space>
             <Button>新增</Button>
@@ -128,7 +77,26 @@ const user = memo(() => {
             <Button>导出</Button>
           </Space>
         </div>
-        <Table<DataType> columns={columns} dataSource={data} scroll={{ y: `calc(100vh - 369px)` }} />
+        <Table<User.IUser>
+          columns={columns}
+          dataSource={data}
+          scroll={{ y: tableHeight }}
+          pagination={{
+            position: ['bottomRight'],
+            current: pageInfo.current,
+            pageSize: pageInfo.pageSize,
+            pageSizeOptions: [10, 20, 30, 40, 50],
+            total: total,
+            showTotal: total => {
+              return `共${total}条`
+            },
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: (page, pageSize) => {
+              setPageInfo({ current: page, pageSize })
+            }
+          }}
+        />
       </div>
     </div>
   )
