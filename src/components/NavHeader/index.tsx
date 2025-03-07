@@ -3,7 +3,10 @@ import { MenuFoldOutlined } from '@ant-design/icons'
 import { Breadcrumb, Switch, Dropdown } from 'antd'
 import type { MenuProps } from 'antd'
 import styles from './index.module.less'
+import { useNavigate } from 'react-router-dom'
+import storage from '@/utils/storage'
 const NavHeader = memo(() => {
+  const navigate = useNavigate()
   const items: MenuProps['items'] = [
     {
       key: '1',

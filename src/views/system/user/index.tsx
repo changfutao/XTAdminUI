@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useState } from 'react'
-import { Form, Button, Input, Space, Table } from 'antd'
+import { Form, Button, Input, Space, Table, Select } from 'antd'
 import type { TableProps } from 'antd'
-import type { IPageInfo, User } from '@/types/api'
+import type { IOption, IPageInfo, IResult, IResultData, User } from '@/types/api'
+import { getPage, getUserStatus, getSexs } from '@/api/user'
 import useTableScrollHeight from '@/hook/useTableScrollHeight'
 import styles from './index.module.less'
 type LayoutType = Parameters<typeof Form>[0]['layout']
@@ -20,7 +21,11 @@ const user = memo(() => {
     },
     {
       title: '手机号',
-      dataIndex: 'phone'
+      dataIndex: 'phonenumber'
+    },
+    {
+      title: '性别',
+      dataIndex: 'sex'
     },
     {
       title: '状态',
@@ -43,29 +48,33 @@ const user = memo(() => {
   const [data, setData] = useState<User.IUser[]>([])
   const [total, setTotal] = useState(0)
   const [pageInfo, setPageInfo] = useState<IPageInfo>({ current: 1, pageSize: 10 })
+  const getUserList = async () => {
+    form.getFieldsValue()
+    // await getPage()
+  }
+  const [userStatus, setUserStatus] = useState<IOption<number>[]>()
+  const handleUserStatus = async () => {
+    const data = await getUserStatus()
+    setUserStatus(data)
+  }
   useEffect(() => {
-    const infos: User.IUser[] = Array.from({ length: 50 })
-      .fill({})
-      .map(_ => ({
-        key: Math.random(),
-        userName: 'John Brown' + Math.random(),
-        nickName: 'aaa',
-        phone: '123123123123',
-        status: '在职'
-      }))
-    setData(infos)
-    setTotal(infos.length)
+    // setData(infos)
+    // setTotal(infos.length)
+    handleUserStatus()
   }, [pageInfo.current, pageInfo.pageSize])
   return (
     <div className={styles.wrapper}>
       <Form className='search-form' layout={formLayout} form={form}>
         <Form.Item label='用户名' name='userName'>
-          <Input />
+          <Input placeholder='请输入用户名' />
+        </Form.Item>
+        <Form.Item label='状态' name='status'>
+          <Select options={userStatus}></Select>
         </Form.Item>
         <Form.Item>
           <Space>
             <Button type='primary'>查询</Button>
-            <Button type='primary'>重置</Button>
+            <Button type='default'>重置</Button>
           </Space>
         </Form.Item>
       </Form>
