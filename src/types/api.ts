@@ -5,6 +5,16 @@ export interface IResult<T = any> {
   msg: string
 }
 
+export interface IResultData<T = any> {
+  total: number
+  list: T
+}
+
+export interface IOption<T = any> {
+  value: T
+  label: string
+}
+
 export interface IPageInfo {
   current: number
   pageSize: number
@@ -24,10 +34,18 @@ export namespace Auth {
 
 export namespace User {
   export interface IUser {
-    key: number
+    id: number
     userName: string
-    nickName: string
-    phone: string
+    nickName?: string
+    phonenumber?: string
     status: string
+    sex?: string
+  }
+  export interface IUserPageParams {
+    currentPage: number
+    pageSize: number
+    userName: string
+    status: number
+    sex: number
   }
 }
