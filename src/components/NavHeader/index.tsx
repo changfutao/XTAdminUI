@@ -3,7 +3,13 @@ import { MenuFoldOutlined } from '@ant-design/icons'
 import { Breadcrumb, Switch, Dropdown } from 'antd'
 import type { MenuProps } from 'antd'
 import styles from './index.module.less'
+import storage from '@/utils/storage'
 const NavHeader = memo(() => {
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '2') {
+      storage.remove('token')
+    }
+  }
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -23,7 +29,7 @@ const NavHeader = memo(() => {
       <div className={styles.right}>
         <Switch checkedChildren='暗黑' unCheckedChildren='默认' />
 
-        <Dropdown menu={{ items }} placement='bottomLeft'>
+        <Dropdown menu={{ items, onClick }} placement='bottomLeft'>
           <span className={styles.title}>Ross</span>
         </Dropdown>
       </div>
