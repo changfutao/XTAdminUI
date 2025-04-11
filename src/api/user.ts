@@ -6,7 +6,7 @@ import { User, IResultData, IOption } from '@/types/api';
  * @returns 
  */
 export const getPage = (data: User.IUserPageParams) => {
-    return request.post('user/getpage', data)
+    return request.post<IResultData>('user/getpage', data)
 }
 /**
  * 获取用户状态
@@ -19,6 +19,30 @@ export const getUserStatus = () => {
  * 获取性别
  * @returns 
  */
-export const getSexs = () => {
-    return request.get('user/getSexs')
+export const getGender = () => {
+    return request.get<IOption<number>[]>('user/getSexs')
+}
+/**
+ * 新增
+ * @param data 
+ * @returns 
+ */
+export const addUser = (data: User.IUser) => {
+    return request.post('user/add', data)
+}
+/**
+ * 修改
+ * @param data 
+ * @returns 
+ */
+export const editUser = (data: User.IUser) => {
+    return request.post('user/edit', data)
+}
+/**
+ * 批量删除
+ * @param ids 
+ * @returns 
+ */
+export const delUser = (ids: number[]) => {
+    return request.post('user/delete', { ids })
 }

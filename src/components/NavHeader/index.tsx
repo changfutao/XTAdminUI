@@ -5,11 +5,11 @@ import type { MenuProps } from 'antd'
 import styles from './index.module.less'
 import storage from '@/utils/storage'
 import { useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/store'
+import { useStore } from '@/store'
 
 const NavHeader = memo(() => {
   const navigate = useNavigate()
-  const setToken = useAuthStore(state => state.setToken)
+  const setToken = useStore(state => state.setToken)
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === '2') {
       storage.remove('token')

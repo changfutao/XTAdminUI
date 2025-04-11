@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from 'react'
 import { Form, Button, Input, Space, Table, Select, Tag, Modal } from 'antd'
 import type { TableProps } from 'antd'
-import type { User, IPageInput } from '@/types/api'
+import type { IPageInfo, User, IPageInput } from '@/types/api'
 import { getPage, delUser } from '@/api/user'
 import useTableScrollHeight from '@/hook/useTableScrollHeight'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -9,7 +9,6 @@ import styles from './index.module.less'
 import Operation from './operation'
 import { IAction } from '@/types/modal'
 import { useStore } from '@/store'
-import { useAntdTable } from 'ahooks'
 type LayoutType = Parameters<typeof Form>[0]['layout']
 const user = memo(() => {
   const [form] = Form.useForm()
@@ -37,7 +36,7 @@ const user = memo(() => {
         cancelText: '取消',
         onOk: async () => {
           await delUser([data.id!])
-          search.submit()
+          getUserList()
         }
       })
     }
@@ -51,7 +50,7 @@ const user = memo(() => {
       cancelText: '取消',
       onOk: async () => {
         await delUser(userIds)
-        search.submit()
+        getUserList()
       }
     })
   }
@@ -114,38 +113,36 @@ const user = memo(() => {
       )
     }
   ]
-
   const [tableRef, tableHeight] = useTableScrollHeight()
+  const [users, setUsers] = useState<User.IUser[]>([])
   const [total, setTotal] = useState(0)
+  const [pageInfo, setPageInfo] = useState<IPageInfo>({ current: 1, pageSize: 10 })
   // 搜索
   const handleSearch = () => {
-    search.submit()
+    getUserList()
   }
   // 重置
   const handleReset = () => {
     form.resetFields()
-    search.submit()
+    getUserList()
   }
   // 获取用户列表数据
-  const getUserList = ({ current, pageSize }: { current: number; pageSize: number }) => {
+  const getUserList = async () => {
     const values = form.getFieldsValue()
     const pageInput: IPageInput = {
-      currentPage: current,
-      pageSize: pageSize,
+      currentPage: pageInfo.current,
+      pageSize: pageInfo.pageSize,
       filter: {
         ...values
       }
     }
-    return getPage(pageInput).then(res => {
-      setTotal(res.total)
-      return {
-        total: res.total,
-        list: res.list
-      }
-    })
+    const data = await getPage(pageInput)
+    setUsers(data.list)
+    setTotal(data.total)
   }
-
-  const { tableProps, search, refresh } = useAntdTable(getUserList, { form })
+  useEffect(() => {
+    getUserList()
+  }, [pageInfo.current, pageInfo.pageSize])
   // 新增
   const handleAdd = () => {
     userRef.current?.open('add')
@@ -187,6 +184,7 @@ const user = memo(() => {
         <Table<User.IUser>
           rowKey='id'
           columns={columns}
+          dataSource={users}
           scroll={{ y: tableHeight }}
           rowSelection={{
             type: 'checkbox',
@@ -195,24 +193,28 @@ const user = memo(() => {
               setUserIds(selectedRowKeys as number[])
             }
           }}
-          {...tableProps}
           pagination={{
             position: ['bottomRight'],
+            current: pageInfo.current,
+            pageSize: pageInfo.pageSize,
             pageSizeOptions: [10, 20, 30, 40, 50],
             total: total,
             showTotal: total => {
               return `共${total}条`
             },
             showSizeChanger: true,
-            showQuickJumper: true
+            showQuickJumper: true,
+            onChange: (page, pageSize) => {
+              setPageInfo({ current: page, pageSize })
+            }
           }}
         />
       </div>
       <Operation
         mRef={userRef}
-        update={(action: IAction) => {
-          if (action === 'add') search.submit()
-          else refresh()
+        update={(current: number | undefined) => {
+          if (current) setPageInfo({ current: current, pageSize: pageInfo.pageSize })
+          getUserList()
         }}
       />
     </div>

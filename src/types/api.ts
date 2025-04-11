@@ -17,12 +17,18 @@ export interface IOption<T = any> {
 
 export interface IPageInfo {
   current: number
-  pageSize: number
+  pageSize?: number
 }
 
 export interface IConfig {
   showLoading?: boolean
   showError?: boolean
+}
+
+export interface IPageInput<T = any> {
+  currentPage: number
+  pageSize: number,
+  filter: T
 }
 
 export namespace Auth {
@@ -34,18 +40,13 @@ export namespace Auth {
 
 export namespace User {
   export interface IUser {
-    id: number
+    id?: number
     userName: string
     nickName?: string
     phonenumber?: string
     status: string
-    sex?: string
-  }
-  export interface IUserPageParams {
-    currentPage: number
-    pageSize: number
-    userName: string
-    status: number
-    sex: number
+    sex?: string,
+    avatorId?: number,
+    avatorPath?: string 
   }
 }
