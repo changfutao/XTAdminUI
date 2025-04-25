@@ -10,7 +10,7 @@ import { message } from '@/utils/AntdGlobal'
 import type { GetProp, UploadProps } from 'antd'
 import storage from '@/utils/storage'
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
-const Operation = memo((props: IModalProp) => {
+const Operation = memo((props: IModalProp<User.IUser>) => {
   const [gender, setGender] = useState<IOption<number>[]>([])
   const layout = {
     labelCol: { span: 4 },
@@ -63,6 +63,7 @@ const Operation = memo((props: IModalProp) => {
         await editUser(data)
         props.update('edit')
       }
+      message.success('操作成功')
       handleCancel()
     }
   }

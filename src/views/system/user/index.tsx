@@ -3,7 +3,7 @@ import { Form, Button, Input, Space, Table, Select, Tag, Modal } from 'antd'
 import type { TableProps } from 'antd'
 import type { User, IPageInput } from '@/types/api'
 import { getPage, delUser } from '@/api/user'
-import useTableScrollHeight from '@/hook/useTableScrollHeight'
+import useTableScroll from '@/hook/useTableScroll'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 import Operation from './operation'
@@ -57,6 +57,15 @@ const user = memo(() => {
   }
   // 列表列
   const columns: TableProps<User.IUser>['columns'] = [
+    {
+      title: '序号',
+      // dataIndex: 'key',
+      // key: 'key',
+      width: 80,
+      render: (value, record, index) => {
+        return <span>{index + 1}</span>
+      }
+    },
     {
       title: '用户名',
       dataIndex: 'userName'
@@ -115,7 +124,7 @@ const user = memo(() => {
     }
   ]
 
-  const [tableRef, tableHeight] = useTableScrollHeight()
+  const [tableRef, tableHeight] = useTableScroll()
   const [total, setTotal] = useState(0)
   // 搜索
   const handleSearch = () => {

@@ -8,3 +8,10 @@ import { Auth } from '@/types/api'
 export const login = (data: Auth.LoginInput) => {
   return request.post<string>('auth/login', data)
 }
+/**
+ * 获取用户权限信息
+ * @returns 
+ */
+export const getUserInfoAndMenus = () => {
+  return request.post<Auth.IMenuPerms>('auth/getUserInfoAndMenus')
+}

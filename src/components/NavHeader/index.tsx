@@ -4,12 +4,13 @@ import { Breadcrumb, Switch, Dropdown } from 'antd'
 import type { MenuProps } from 'antd'
 import styles from './index.module.less'
 import storage from '@/utils/storage'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useRouteLoaderData } from 'react-router-dom'
 import { useStore } from '@/store'
 
 const NavHeader = memo(() => {
   const navigate = useNavigate()
   const setToken = useStore(state => state.setToken)
+  const data: any = useRouteLoaderData('layout')
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === '2') {
       storage.remove('token')
@@ -37,7 +38,7 @@ const NavHeader = memo(() => {
         <Switch checkedChildren='暗黑' unCheckedChildren='默认' />
 
         <Dropdown menu={{ items, onClick }} placement='bottomLeft'>
-          <span className={styles.title}>Ross</span>
+          <span className={styles.title}>{data.userName}</span>
         </Dropdown>
       </div>
     </div>

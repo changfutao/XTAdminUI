@@ -30,20 +30,12 @@ const Login = memo(() => {
           onFinish={onFinish}
           autoComplete='off'
         >
-          <Form.Item<Auth.LoginInput>
-            placeholder='请输入用户名'
-            name='username'
-            rules={[{ required: true, message: '请输入用户名!' }]}
-          >
-            <Input />
+          <Form.Item<Auth.LoginInput> name='userName' rules={[{ required: true, message: '请输入用户名!' }]}>
+            <Input placeholder='请输入用户名' />
           </Form.Item>
 
-          <Form.Item<Auth.LoginInput>
-            placeholder='请输入密码'
-            name='password'
-            rules={[{ required: true, message: '请输入密码!' }]}
-          >
-            <Input.Password />
+          <Form.Item<Auth.LoginInput> name='password' rules={[{ required: true, message: '请输入密码!' }]}>
+            <Input.Password placeholder='请输入密码' />
           </Form.Item>
 
           <Form.Item label={null}>
